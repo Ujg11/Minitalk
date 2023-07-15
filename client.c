@@ -6,7 +6,7 @@
 /*   By: ojimenez <ojimenez@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/13 11:41:21 by ojimenez          #+#    #+#             */
-/*   Updated: 2023/07/13 17:12:01 by ojimenez         ###   ########.fr       */
+/*   Updated: 2023/07/15 16:32:16 by ojimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	send_signal(int pid, char c)
 
 	err = 1;
 	n_bit = 0;
-	while (n_bit < 7)
+	while (n_bit <= 7)
 	{
 		if ((c >> n_bit) & 1)
 		{
