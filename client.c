@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
 void	print_error(void)
 {
@@ -27,18 +28,18 @@ void	send_signal(int pid, char c)
 	int		err;
 
 	err = 1;
-	n_bit = 0;
-	while (n_bit <= 7)
+	n_bit = 7;
+	while (n_bit >= 0)
 	{
 		if ((c >> n_bit) & 1)
 		{
-			err = kill(pid, SIGUSR2);
+			err = kill(pid, SIGUSR1);
 			if (err == -1)
 				print_error();
 		}
 		else
 		{
-			err = kill(pid, SIGUSR1);
+			err = kill(pid, SIGUSR2);
 			if (err == -1)
 				print_error();
 		}
@@ -57,6 +58,8 @@ int	main(int argc, char *argv[])
 	if (argc == 3)
 	{
 		pid = ft_atoi(argv[1]);
+		if (pid == 0)
+			return (1);
 		str = argv[2];
 		while (str[i])
 		{
