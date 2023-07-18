@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ojimenez <ojimenez@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/13 11:41:03 by ojimenez          #+#    #+#             */
-/*   Updated: 2023/07/18 18:08:53 by ojimenez         ###   ########.fr       */
+/*   Created: 2023/07/18 17:20:49 by ojimenez          #+#    #+#             */
+/*   Updated: 2023/07/18 19:41:47 by ojimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,21 @@ void	print_byte(void)
 	ft_printf("%c", res);
 }
 
-void	recieve_signal(int signal)
+void	recieve_signal(int signal, siginfo_t *info, void *v)
 {
 	static int	i = 0;
 
+	(void)v;
 	if (signal == SIGUSR1)
 	{
 		g_by[i] = 1;
+		kill(info->si_pid, SIGUSR1);
 		i++;
 	}
 	if (signal == SIGUSR2)
 	{
 		g_by[i] = 0;
+		kill(info->si_pid, SIGUSR1);
 		i++;
 	}
 	if (i == 8)
@@ -52,12 +55,16 @@ void	recieve_signal(int signal)
 
 int	main(void)
 {
+	struct sigaction	s;
+
+	s.sa_flags = SA_SIGINFO;
+	s.sa_sigaction = recieve_signal;
 	ft_printf("Servidor iniciado!!\n");
 	ft_printf("El PID del servidor es: %d\n", getpid());
 	while (1)
 	{
-		signal(SIGUSR2, recieve_signal);
-		signal(SIGUSR1, recieve_signal);
+		sigaction(SIGUSR2, &s, 0);
+		sigaction(SIGUSR1, &s, 0);
 		pause();
 	}
 	return (0);

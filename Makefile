@@ -6,7 +6,7 @@
 #    By: ojimenez <ojimenez@student.42barcelona.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/13 11:29:20 by ojimenez          #+#    #+#              #
-#    Updated: 2023/07/13 14:05:37 by ojimenez         ###   ########.fr        #
+#    Updated: 2023/07/18 19:35:49 by ojimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,8 @@ LIBFT = libft
 
 SRCS_SERVER = server.c
 SRCS_CLIENT = client.c
+SRCS_SERVER_BONUS = server_bonus.c
+SRCS_CLIENT_BONUS = client_bonus.c
 
 all:
 	@make -s -C $(LIBFT)
@@ -37,5 +39,13 @@ fclean: clean
 		$(RM) $(SERVER) $(CLIENT)
 		@echo "Clean del Client i del Servidor"
 
+bonus:
+	@make -s -C $(LIBFT)
+	$(CC) $(FLAGS) $(SRCS_SERVER_BONUS) -o $(SERVER)
+	$(CC) $(FLAGS) $(SRCS_CLIENT_BONUS) -o $(CLIENT)
+	@echo "Servidor i Client de bonus creats"
+
+
 re: fclean all
-		
+
+.PHONY: all client server clean fclean re bonus
