@@ -6,46 +6,74 @@
 #    By: ojimenez <ojimenez@student.42barcelona.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/13 11:29:20 by ojimenez          #+#    #+#              #
-#    Updated: 2023/07/18 19:35:49 by ojimenez         ###   ########.fr        #
+#    Updated: 2023/07/19 15:55:04 by ojimenez         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SERVER = server
 CLIENT = client
+SERVER_BONUS = server_bonus
+CLIENT_BONUS = client_bonus
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-RM = rm -f
-FLAGS = -Wall -Wextra -Werror -I$(LIBFT)/headers -L$(LIBFT) -lft
+RM = rm -rf
 
-LIBFT = libft
+LIBFT_PATH = ./libft
+LIBFT = $(LIBFT_PATH)/libft.a
 
 SRCS_SERVER = server.c
-SRCS_CLIENT = client.c
-SRCS_SERVER_BONUS = server_bonus.c
-SRCS_CLIENT_BONUS = client_bonus.c
+OBJ_SERVER = $(SRCS_SERVER:.c=.o)
 
-all:
-	@make -s -C $(LIBFT)
-	$(CC) $(FLAGS) $(SRCS_SERVER) -o $(SERVER)
-	$(CC) $(FLAGS) $(SRCS_CLIENT) -o $(CLIENT)
-	@echo "Servidor i Client creats"
+SRCS_CLIENT = client.c
+OBJ_CLIENT = $(SRCS_CLIENT:.c=.o)
+
+SRCS_SERVER_BONUS = server_bonus.c
+OBJ_SERVER_BONUS = $(SRCS_SERVER_BONUS:.c=.o)
+
+SRCS_CLIENT_BONUS = client_bonus.c
+OBJ_CLIENT_BONUS = $(SRCS_CLIENT_BONUS:.c=.o)
+
+.PHONY: all clean fclean re bonus
+
+all: $(SERVER) $(CLIENT)
+
+$(LIBFT):
+	$(MAKE) -s -C $(LIBFT_PATH)
+
+$(SERVER): $(OBJ_SERVER) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ_SERVER) -o $@ -L$(LIBFT_PATH) -lft
+
+$(CLIENT): $(OBJ_CLIENT) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ_CLIENT) -o $@ -L$(LIBFT_PATH) -lft
+
+$(SERVER_BONUS): $(OBJ_SERVER_BONUS) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ_SERVER_BONUS) -o $@ -L$(LIBFT_PATH) -lft
+
+$(CLIENT_BONUS): $(OBJ_CLIENT_BONUS) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ_CLIENT_BONUS) -o $@ -L$(LIBFT_PATH) -lft
+
+$(OBJ_SERVER): $(SRCS_SERVER)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_CLIENT): $(SRCS_CLIENT)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_SERVER_BONUS): $(SRCS_SERVER_BONUS)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_CLIENT_BONUS): $(SRCS_CLIENT_BONUS)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@make clean -s -C $(LIBFT)
+	$(MAKE) clean -s -C $(LIBFT_PATH)
+	$(RM) $(OBJ_SERVER) $(OBJ_CLIENT) $(OBJ_SERVER_BONUS) $(OBJ_CLIENT_BONUS)
 
 fclean: clean
-		@make fclean -s -C $(LIBFT)
-		$(RM) $(SERVER) $(CLIENT)
-		@echo "Clean del Client i del Servidor"
-
-bonus:
-	@make -s -C $(LIBFT)
-	$(CC) $(FLAGS) $(SRCS_SERVER_BONUS) -o $(SERVER)
-	$(CC) $(FLAGS) $(SRCS_CLIENT_BONUS) -o $(CLIENT)
-	@echo "Servidor i Client de bonus creats"
-
+	$(MAKE) fclean -s -C $(LIBFT_PATH)
+	$(RM) $(SERVER) $(CLIENT) $(SERVER_BONUS) $(CLIENT_BONUS)
+	@echo "Clean del Client i del Servidor"
 
 re: fclean all
 
-.PHONY: all client server clean fclean re bonus
+bonus: $(SERVER_BONUS) $(CLIENT_BONUS)
