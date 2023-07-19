@@ -6,7 +6,7 @@
 /*   By: ojimenez <ojimenez@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 17:20:39 by ojimenez          #+#    #+#             */
-/*   Updated: 2023/07/18 20:31:05 by ojimenez         ###   ########.fr       */
+/*   Updated: 2023/07/19 12:09:39 by ojimenez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	ft_ack(int signal, siginfo_t *info, void *v)
 	static int	i = 0;
 
 	write(2, "ack", 3);
-
 	(void)info;
 	(void)v;
 	if (signal == SIGUSR1)
